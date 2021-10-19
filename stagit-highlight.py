@@ -47,7 +47,7 @@ def highlight_file(pathname: str) -> int:
 			code += m.group(1) + "\n"
 
 		# Link to the syntax stylesheet
-		if "style.css" in line:
+		if re.match(r'<link rel="stylesheet" type="text/css" href="(../)*style.css"/>$', line):
 			print(line + line.replace("style.css", "syntax.css"), end="")
 		# Set the in_content flag if we entered the content div, this is where the code is
 		elif line == '<div id="content">\n':
@@ -60,7 +60,7 @@ def highlight_file(pathname: str) -> int:
 		elif line == "</div>\n":
 			print(line + "</div>", end="")
 		# Add a div with class "highlight"
-		elif '<pre id="blob">' in line:
+		elif re.match(r'<p> .* <a href="(../)*raw/.*">raw</a></p><hr/><pre id=blob">$', line):
 			print(line.replace("<hr/>", '<hr/><div class="highlight">'), end="")
 		else:
 			print(line, end="")
